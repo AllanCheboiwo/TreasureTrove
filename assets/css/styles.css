@@ -1,0 +1,126 @@
+* {
+	box-sizing: border-box;
+}
+.autocomplete-items {
+	position: absolute;
+	border: none;
+	z-index: 99;
+	top: 100%;
+	margin-top: 7px;
+	left: 0;
+	right: 0;
+	width: 100%;
+	box-shadow: 0 0 6px #cccccc;
+	background-color: #fff;
+	border-radius: 6px !important;
+	max-height: 300px;
+	overflow-y: auto;
+	padding: 4px 0;
+}
+.autocomplete-items div {
+	padding: 8px;
+	cursor: pointer !important;
+	border: none;
+}
+.autocomplete-items div:hover {
+	/*when hovering an item:*/
+	background-color: #e9e9e9;
+}
+.autocomplete-active {
+	/*when navigating through the items using the arrow keys:*/
+	background-color: DodgerBlue !important;
+	color: #ffffff;
+}
+
+/* ===== Scrollbar CSS ===== */
+/* Firefox */
+* {
+	scrollbar-width: auto;
+	scrollbar-color: #1cc4ab #169884;
+}
+
+/* Chrome, Edge, and Safari */
+	*::-webkit-scrollbar {
+	width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+	background: #169884;
+	border-radius: 0px 0px 6px 0px;
+}
+
+*::-webkit-scrollbar-thumb {
+	background-color: #1cc4ab;
+	border-radius: 6px;
+	border: 2px solid #169884;
+	box-shadow: 0 0 3px #169884;
+}
+
+#toast-1 {
+	z-index: 999999999 !important;
+	position: absolute;
+	bottom: 0;
+	display: flex;
+	left: 0;
+}
+
+/* The snackbar - position it at the bottom and in the middle of the screen */
+#snackbar {
+	visibility: hidden; /* Hidden by default. Visible on click */
+	min-width: 250px; /* Set a default minimum width */
+	margin-left: -125px; /* Divide value of min-width by 2 */
+	background-color: #1cc4ab; /* Black background color */
+	color: #fff; /* White text color */
+	text-align: center; /* Centered text */
+	border-radius: 4px; /* Rounded borders */
+	padding: 16px; /* Padding */
+	position: fixed; /* Sit on top of the screen */
+	z-index: 999999999 !important; /* Add a z-index if needed */
+	left: 50%; /* Center the snackbar */
+	bottom: 30px; /* 30px from the bottom */
+	border: none;
+	box-shadow: 0 0 6px #169884;
+	displayy: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/* Show the snackbar when clicking on a button (class added with JavaScript) */
+#snackbar.show {
+	visibility: visible; /* Show the snackbar */
+	/* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+	However, delay the fade out process for 2.5 seconds */
+	-webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+	animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+	from {bottom: 0; opacity: 0;}
+	to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+	from {bottom: 0; opacity: 0;}
+	to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+	from {bottom: 30px; opacity: 1;}
+	to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+	from {bottom: 30px; opacity: 1;}
+	to {bottom: 0; opacity: 0;}
+}
+
+.form-select {
+	margin: 4px 8px 4px 0px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
+.form-select option {
+	padding: 8px;
+}

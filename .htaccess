@@ -1,0 +1,38 @@
+# Prevent viewing of .htaccess file
+<Files .htaccess>
+order allow,deny
+deny from all
+</Files>
+
+# Prevent directory listings
+Options All -Indexes
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# RewriteCond %{QUERY_STRING} ^category.php?=$1$
+# RewriteRule ^category\.php$ /category/$1? [R=302,L]
+
+# RewriteRule ^login/([^/]*)$ login.php
+# RewriteRule ^([^\.]*)$  [L]
+RewriteRule ^login([^\.]*)$ login.php [L]
+RewriteRule ^register([^\.]*)$ register.php [L]
+RewriteRule ^cart([^\.]*)$ cart.php [L]
+RewriteRule ^orders([^\.]*)$ orders.php [L]
+RewriteRule ^account([^\.]*)$ account.php [L]
+RewriteRule ^settings([^\.]*)$ settings.php [L]
+RewriteRule ^products([^\.]*)$ products.php [L]
+RewriteRule ^checkout([^\.]*)$ checkout.php [L]
+
+RewriteRule ^category/([^/]*)$ /category.php?category=$1 [L]
+RewriteRule ^products/category/([^/]*)$ /products.php?category=$1 [L]
+RewriteRule ^products/search/([^/]*)$ /products.php?search=$1 [L]
+RewriteRule ^products/sort/([^/]*)/filter/([^/]*)/([^/]*)-([^/]*)$ /product.php?sort=$1&filter=$2&minPrice=$3&maxPrice=$4
+RewriteRule ^category/([^/]*)/sort/([^/]*)/filter/([^/]*)/([^/]*)-([^/]*)$ /category.php?category=$1&sort=$2&filter=$3&minPrice=$4&maxPrice=$5
+
+RewriteRule ^products/category/([^/]*)/sort/([^/]*)/filter/([^/]*)/([^/]*)-([^/]*)$ /products.php?category=$1&sort=$2&filter=$3&minPrice=$4&maxPrice=$5
+
+RewriteRule ^category/([^/]*)/sort/([^/]*)/filter/([^/]*)$ /category.php?category=$1&sort=$2&filter=$3 [L]
+
+RewriteRule ^products/category/([^/]*)/sort/([^/]*)/filter/([^/]*)$ /products.php?category=$1&sort=$2&filter=$3 [L]
