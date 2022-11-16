@@ -343,6 +343,10 @@ class Cart {
         $shiptoState = $data['shiptoState'];
         $shiptoPostalCode = $data['shiptoPostalCode'];
         $shiptoCountry = $data['shiptoCountry'];
+        if ($data['customerId'] === null) {
+            $res['message'] = 'Please login to checkout';
+            return $res;
+        }
         $cartItems = isset($_SESSION['cart']) ? $_SESSION['cart'] : array();
         if (!empty($cartItems)) {
             // get total amount
@@ -400,8 +404,6 @@ class Cart {
         $orderProducts = isset($_SESSION['cart']) ? $_SESSION['cart'] : array();
         $orderSummaryString = "";
         if (!empty($orderProducts)) {
-            // print_r($orderProducts);
-            echo "<script>console.log($orderProducts)</script>";
             foreach ($orderProducts as $orderProduct) {
                 $product = new Product($orderProduct['productId']);
                 $category = new Category($product->categoryId);
@@ -417,13 +419,6 @@ class Cart {
                                                     <h6 class="text-muted mb-2">Price: $'.number_format($orderProduct['price'] * $orderProduct['quantity'], 2).'</h6>
                                                     <p>'.$product->productDesc.'</p>
                                                     ';
-                // if ($orderProduct['orderDate'] !== null) {
-                //     $orderSummaryString .= '<button class="btn btn-primary" type="button" style="border-style: none;border-radius: 6px;box-shadow: 0px 0px 6px #169884;display: inline-flex;background: #1cc4ab;">
-                //                                 <i class="material-icons" style="margin-right: 8px;">local_grocery_store</i>
-                //                                 Buy it again
-                //                             </button>
-                //                             ';
-                // }
                 $orderSummaryString .='</div>
                                             </div>
                                         </div>';

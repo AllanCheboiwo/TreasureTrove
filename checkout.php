@@ -14,7 +14,7 @@
     $methods = $customer->GetPaymentMethods();
     $total = Cart::GetTotalPrice();
     $itemCount = Cart::GetTotalItems();
-    $customerId = $_SESSION['customer']['customerId'];
+    $customerId = (isset($_SESSION['customer'])) ? $_SESSION['customer']['customerId'] : null;
     require 'include/header.php';
 ?>
 <section class="container-md">

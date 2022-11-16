@@ -250,39 +250,59 @@ class Product {
         }
     }
 
-    public function addProduct($productName, $productPrice,
-    $productImageURL, $productImage, $productDesc, $categoryId) {
-        $sql = "INSERT INTO product (productName, productPrice,
-        productImageURL, productImage, productDesc, categoryId) VALUES (?, ?, ?, ?, ?, ?)";
-        $params = array($productName, $productPrice, $productImageURL, $productImage, $productDesc, $categoryId);
-        $db = new DB();
-        $stmt = sqlsrv_query($db->conn, $sql, $params);
-        if ($stmt === false) {
-            die(print_r(sqlsrv_errors(), true));
+    // public function addProduct($productName, $productPrice,
+    // $productImageURL, $productImage, $productDesc, $categoryId) {
+    //     $sql = "INSERT INTO product (productName, productPrice,
+    //     productImageURL, productImage, productDesc, categoryId) VALUES (?, ?, ?, ?, ?, ?)";
+    //     $params = array($productName, $productPrice, $productImageURL, $productImage, $productDesc, $categoryId);
+    //     $db = new DB();
+    //     $stmt = sqlsrv_query($db->conn, $sql, $params);
+    //     if ($stmt === false) {
+    //         die(print_r(sqlsrv_errors(), true));
+    //     }
+    // }
+
+    public static function UpdateProduct($productId, $updateItem, $updateValue) {
+        $res = [
+            'status' => false,
+            'message' => 'Something went wrong'
+        ];
+        if (isset($productId)) {
+            $sql = "UPDATE product SET $updateItem = ? WHERE productId = ?";
+            $params = array($updateValue, $productId);
+            $db = new DB();
+            $stmt = sqlsrv_query($db->conn, $sql, $params);
+            if ($stmt === false) {
+                die(print_r(sqlsrv_errors(), true));
+            } else {
+                $res['status'] = true;
+                $res['message'] = 'Product updated successfully';
+            }
+        } else {
+            $res['message'] = 'Product not found';
         }
+        return $res;
     }
 
-    public function updateProduct($productId, $productName, $productPrice,
-    $productImageURL, $productImage, $productDesc, $categoryId) {
-        $sql = "UPDATE product SET productName = ?, productPrice = ?,
-        productImageURL = ?, productImage = ?, productDesc = ?, categoryId = ? WHERE productId = ?";
-        $params = array($productName,$productPrice,$productImageURL,
-        $productImage,$productDesc,$categoryId,$productId);
-        $db = new DB();
-        $stmt = sqlsrv_query($db->conn, $sql, $params);
-        if ($stmt === false) {
-            die(print_r(sqlsrv_errors(), true));
+    public static function DeleteProduct($productId) {
+        $res = [
+            'status' => false,
+            'message' => 'Product not found'
+        ];
+        if (isset($productId)) {
+            $sql = "DELETE FROM product WHERE productId = ?";
+            $params = array($productId);
+            $db = new DB();
+            $stmt = sqlsrv_query($db->conn, $sql, $params);
+            if ($stmt === false) {
+                die(print_r(sqlsrv_errors(), true));
+            }
+            $res['status'] = true;
+            $res['message'] = 'Product deleted successfully';
+        } else {
+            $res['message'] = 'Product ID not found';
         }
-    }
-
-    public function deleteProduct($productId) {
-        $sql = "DELETE FROM product WHERE productId = ?";
-        $params = array($productId);
-        $db = new DB();
-        $stmt = sqlsrv_query($db->conn, $sql, $params);
-        if ($stmt === false) {
-            die(print_r(sqlsrv_errors(), true));
-        }
+        return $res;
     }
 
     public function getProductId() {
@@ -455,11 +475,11 @@ class Product {
     public function DisplayAddToCartButton() {
         $data = [
             "pid" => $this->productId,
-            "pname" => $this->productName,
+            "pname" => urlencode($this->productName),
             "price" => $this->productPrice,
             "quantity" => 1
         ];
-        return "<a onclick='cartAjax(".json_encode($data).", \"add\")' class='btn btn-primary preview-toggle' style='margin: 0px; box-shadow: 0px 0px 6px #0d6efd; border: none;margin-left:8px'>Cart It
+        return "<a onclick='cartAjax(".json_encode($data).", \"add\")' class='btn btn-primary btn-sm preview-toggle' style='margin: 0px; box-shadow: 0px 0px 6px #0d6efd; border: none;margin-left:8px'>Cart It
         </a>";
     }
 
@@ -491,6 +511,31 @@ class Product {
     public static function ImageLink($productId) {
         $product = Product::GetProduct($productId);
         return $product->ProductImageLink();
+    }
+
+    public static function AddProduct($data = array()) {
+        $res = [
+            "status" => false,
+            "message" => "Product not added"
+        ];
+        if (isset($data['productName']) && isset($data['productDesc']) && isset($data['productImage']) && isset($data['productImageURL']) && isset($data['productCategoryId'])) {
+            $productName = $data['productName'];
+            $productPrice = $data['productPrice'];
+            $productDesc = $data['productDesc'];
+            $productImage = $data['productImage'];
+            $productImageURL = $data['productImageURL'];
+            $productCategoryId = $data['productCategoryId'];
+            $sql = "INSERT INTO products (productName, productPrice, productDesc, productImage, productImageURL, productCategoryId) VALUES (?, ?, ?, ?, ?, ?)";
+            $db = new DB();
+            $pstmt = sqlsrv_prepare($db->conn, $sql, array($productName, $productPrice, $productDesc, $productImage, $productImageURL, $productCategoryId));
+            if (sqlsrv_execute($pstmt)) {
+                $res['status'] = true;
+                $res['message'] = "Product added";
+            }
+        } else {
+            $res['message'] = "Missing data";
+        }
+        return $res;
     }
 
 }

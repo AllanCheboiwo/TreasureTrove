@@ -46,6 +46,8 @@ switch($_REQUEST['action']) {
             $customerId = $_REQUEST['customerId'];
         } elseif(isset($_SESSION['customer'])) {
             $customerId = $_SESSION['customer']['customerId'];
+        } else {
+            $customerId = null;
         }
 
         if ($customerId !== null) {

@@ -95,33 +95,206 @@
                         </div>
                     </div>
                     <div class="col" style="padding: 10px;">
-                        <button class="btn btn-primary" type="button" style="background: #1cc4ab;border-style: none;box-shadow: 0px 0px 6px #169884;">Add a review</button>
+                        <button id="addReview" class="btn btn-primary" type="button" style="background: #1cc4ab;border-style: none;box-shadow: 0px 0px 6px #169884;">Add a review</button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col">
             <section style="padding: 10px;">
-                <h3 style="padding: 8px;background: #1cc4ab;border-style: none;border-radius: 8px;box-shadow: 0px 0px 3px #169884;color: #364652;margin: 0px;">Reviews</h3>
+                <h3 style="padding: 8px;background: #1cc4ab;border-style: none;border-radius: 8px;box-shadow: 0px 0px 3px #169884;color: #364652;margin: 0px;">Reviews (<?php echo count(Review::GetReviewsByProductId($product->productId)); ?>)</h3>
             </section>
             <div class="row g-0 row-cols-1" style="padding: 10px;">
-                <div class="col">
-                    <div class="card" style="border-style: none;border-radius: 8px;box-shadow: 0px 0px 6px #cccccc;">
+                <div class="col" id="newReview" style="margin: 10px 0;">
+                    <div class="card" style="box-shadow: 0px 0px 6px #cccccc;border-style: none;">
                         <div class="card-body">
-                            <h4 class="card-title" style="color: #364652;">Customer Name</h4>
-                            <h6 class="text-muted card-subtitle mb-2">Reviewed on ReviewDate</h6>
-                            <p class="card-text">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p><a class="card-link" href="#">Link</a><a class="card-link" href="#">Link</a>
+                            <h4 class="card-title">Write your review</h4>
+                            <h6 class="text-muted d-flex align-items-center align-content-center card-subtitle mb-2">
+                                Rating: <span id="revStars" class="d-flex justify-content-center align-items-center align-content-center">
+                                    <i class="material-icons">star</i>
+                                    <i class="material-icons">star</i>
+                                    <i class="material-icons">star</i>
+                                    <i class="material-icons">star</i>
+                                    <i class="material-icons">star</i>
+                                </span>
+                            </h6>
+                            <form>
+                                <textarea class="form-control" name="reviewComment" placeholder="Tell us what you thought about this product..." rows="4" autocomplete="off" spellcheck="true" style="background: #eaeaea;border-style: none;box-shadow: inset 0px 0px 3px #cccccc;"></textarea>
+                                <button class="btn btn-primary" id="postReview" type="button" style="margin-top: 8px;padding: 4px 8px;background: #1cc4ab;border-style: none;box-shadow: 0px 0px 3px #169884;">Post Review</button>
+                            </form>
                         </div>
                     </div>
                 </div>
+                <?php
+                    $reviews = Review::GetReviewsByProductId($product->productId);
+                    if(empty($reviews)){
+                        echo '<h5 class="text-muted card-subtitle mb-2">No reviews yet</h5>';
+                    } else {
+                        foreach($reviews as $review){
+                            echo Review::DisplayReview($review['reviewId']);
+                        }
+                    }
+                ?>
             </div>
         </div>
     </div>
 </section>
-<!-- Begin Reviews -->
-<section class="container">
-</section>
-<!-- End Reviews -->
+<script type="text/javascript">
+    $(document).ready(function(){
+        let reviewStars = $('#revStars');
+        let reviewStarsIcons = reviewStars.find('i');
+        reviewStarsIcons.on('click', function(){
+            let starIndex = $(this).index();
+            reviewStarsIcons.each(function(index){
+                if(index <= starIndex){
+                    $(this).addClass('rated');
+                } else {
+                    $(this).removeClass('rated');
+                }
+            });
+        });
+        $('#newReview').hide();
+        $('#postReview').on('click', function(){
+            let reviewComment = $(this).parent().find('textarea[name="reviewComment"]').val();
+            let reviewRating = reviewStars.find('i.rated').length;
+            let productId = <?php echo $product->productId; ?>;
+            if(reviewComment.length > 0){
+                $.ajax({
+                    url: '/include/api/product.php',
+                    type: 'POST',
+                    data: {
+                        action: 'addReview',
+                        comment: reviewComment,
+                        rating: reviewRating,
+                        pid: productId
+                    },
+                    success: function(response){
+                        console.log(response);
+                        response = JSON.parse(response);
+                        showSnackbar(response.message);
+                        if(response.status){
+                            window.location.reload();
+                            // reviewStars.each(function(index){
+                            //     $(this).removeClass('rated');
+                            // });
+                            reviewStarsIcons.each(function(index){
+                                $(this).removeClass('rated');
+                            });
+                            $('#newReview').slideToggleUp();
+                        }
+                    }
+                });
+            } else {
+                alert('Please enter a review comment');
+            }
+        });
+        $('#addReview').on('click', function(){
+            $('#newReview').slideToggle();
+        });
+        let deleteReviewButtons = $('.delete-review');
+        deleteReviewButtons.on('click', function(){
+            let reviewId = $(this).data('review-id');
+            $.ajax({
+                url: '/include/api/product.php',
+                type: 'POST',
+                data: {
+                    action: 'deleteReview',
+                    rid: reviewId
+                },
+                success: function(response){
+                    console.log(response);
+                    response = JSON.parse(response);
+                    showSnackbar(response.message);
+                    if(response.status){
+                        // window.location.reload();
+                        $('#review-' + reviewId).slideToggleUp();
+                    }
+                }
+            });
+        });
+        let editReviewButtons = $('.edit-review');
+        editReviewButtons.on('click', function(){
+            let reviewId = $(this).data('review-id');
+            let reviewComment = $('#review-' + reviewId).find('.card-text').text();
+            let mode = "edit";
+            let reviewRating = $('#review-' + reviewId).find('.card-subtitle').data('rating');
+            $('#review-' + reviewId).find('.card-text').html('<textarea class="form-control" name="reviewComment" placeholder="Tell us what you thought about this product..." rows="4" autocomplete="off" spellcheck="true" style="background: #eaeaea;border-style: none;box-shadow: inset 0px 0px 3px #cccccc;">' + reviewComment + '</textarea>');
+            $('#review-' + reviewId).find('.card-subtitle').html('Rating: <span id="revStars" class="d-flex align-items-center align-content-center"></span>');
+            // toggle readonly on textarea if we're edding
+            if(mode == "edit"){
+                $('#review-' + reviewId).find('textarea[name="reviewComment"]').attr('readonly', false);
+            } else {
+                $('#review-' + reviewId).find('textarea[name="reviewComment"]').attr('readonly', true);
+            }
+            let reviewStars = $('#review-' + reviewId).find('#revStars');
+            for(let i = 0; i < 5; i++){
+                if(i < reviewRating){
+                    reviewStars.append('<i class="material-icons rated">star</i>');
+                } else {
+                    reviewStars.append('<i class="material-icons">star</i>');
+                }
+            }
+            let reviewStarsIcons = reviewStars.find('i');
+            reviewStarsIcons.on('click', function(){
+                let starIndex = $(this).index();
+                reviewStarsIcons.each(function(index){
+                    if(index <= starIndex){
+                        $(this).addClass('rated');
+                    } else {
+                        $(this).removeClass('rated');
+                    }
+                });
+            });
+            // add updateReview button if not exists
+            if($('#review-' + reviewId).find('#updateReview').length == 0){
+                $('#review-' + reviewId).find('.card-body').append('<button class="btn btn-primary btn-sm" id="updateReview" type="button" style="margin-top: 8px;padding: 4px 8px;background: #1cc4ab;border-style: none;box-shadow: 0px 0px 3px #169884;margin-left:8px">Update</button>');
+                $('#review-' + reviewId).find('#updateReview').on('click', function(){
+                    let reviewComment = $(this).parent().find('textarea[name="reviewComment"]').val();
+                    let reviewRating = reviewStars.find('i.rated').length;
+                    let productId = <?php echo $product->productId; ?>;
+                    if(reviewComment.length > 0){
+                        $.ajax({
+                            url: '/include/api/product.php',
+                            type: 'POST',
+                            data: {
+                                action: 'updateReview',
+                                comment: reviewComment,
+                                rating: reviewRating,
+                                rid: reviewId
+                            },
+                            success: function(response){
+                                console.log(response);
+                                response = JSON.parse(response);
+                                showSnackbar(response.message);
+                                if(response.status){
+                                    window.location.reload();
+                                    // reviewStars.each(function(index){
+                                    //     $(this).removeClass('rated');
+                                    // });
+                                    reviewStarsIcons.each(function(index){
+                                        $(this).removeClass('rated');
+                                    });
+                                    $('#newReview').slideToggleUp();
+                                }
+                            }
+                        });
+                    } else {
+                        alert('Please enter a review comment');
+                    }
+                    return false;
+                });
+            }
+            
+            // dont add cancel if a canel already exists
+            if($('#review-' + reviewId).find('#cancelReview').length == 0){
+                $('#review-' + reviewId).find('.card-body').append('<button class="btn btn-primary btn-sm" id="cancelReview" type="button" style="margin-top: 8px; margin-left: 8px; padding: 4px 8px;background: #1cc4ab;border-style: none;box-shadow: 0px 0px 3px #169884;">Cancel</button>');
+                $('#review-' + reviewId).find('#cancelReview').on('click', () => {
+                    window.location.reload();
+                });
+            }
+        });
+    });
+</script>
 <?php
     require "include/footer.php";
 ?>

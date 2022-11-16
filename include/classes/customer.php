@@ -62,7 +62,8 @@ class Customer extends AUTH {
             'city' => $this->city,
             'state' => $this->state,
             'postalCode' => $this->postalCode,
-            'country' => $this->country
+            'country' => $this->country,
+            'customerId' => $this->customerId
         );
         return $addr;
     }
@@ -247,5 +248,17 @@ class Customer extends AUTH {
 
     public function FullName() {
         return $this->firstName.' '. $this->lastName;
+    }
+
+    public static function GetFullName($user) {
+        $sql = "SELECT firstName, lastName FROM customer WHERE customerId = ?";
+        $params = array($user);
+        $db = new DB();
+        $stmt = sqlsrv_query($db->conn, $sql, $params);
+        if ($stmt === false) {
+            die(print_r(sqlsrv_errors(), true));
+        }
+        $result = sqlsrv_fetch_array($stmt);
+        return $result['firstName'].' '.$result['lastName'];
     }
 }

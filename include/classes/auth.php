@@ -23,7 +23,8 @@ class AUTH extends DB {
             AUTH::$customer = null;
             $_SESSION['loggedIn'] = false;
             $_SESSION['customer'] = null;
-            session_destroy();
+            $_SESSION['userId'] = null;
+            // session_destroy();
             $res['status'] = true;
             $res['message'] = 'Logged Out';
         } else {

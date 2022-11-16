@@ -40,7 +40,7 @@
                     'user' => $_POST['user']
                 ];
                 $res = AUTH::ResetPassword($sdata);
-                } else {
+            } else {
                 $res['message'] = 'Missing username/email';
             }
             break;

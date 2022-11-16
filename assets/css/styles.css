@@ -124,3 +124,15 @@
 .form-select option {
 	padding: 8px;
 }
+
+.btn {
+	padding: 4px 6px;
+}
+
+.rated {
+	color: #f1c40f;
+}
+
+i {
+	cursor: pointer;
+}

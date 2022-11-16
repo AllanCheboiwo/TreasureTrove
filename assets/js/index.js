@@ -36,7 +36,8 @@ const cartAjax = (data, action) => {
         console.log(response);
         showSnackbar(response['message']);
         if (response.status) {
-            window.location.reload(true);
+            window.location.reload();
+            // window.location.href=window.location
         }
     })
 }
@@ -50,7 +51,7 @@ const deletePM = (e) => {
         res = JSON.parse(res);
         showSnackbar(res.message);
         if (res.status) {
-            window.location.reload();
+            window.location.href=window.location.href
         }
     })
 }

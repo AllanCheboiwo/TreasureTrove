@@ -1,6 +1,6 @@
 <?php
     if (isset($_REQUEST['search'])) {
-        header('Location: product.php?pid='.$_REQUEST['search']);
+        header('Location: /product.php?pid='.$_REQUEST['search']);
     }
 ?>
 <!DOCTYPE html>
@@ -8,7 +8,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no, minimal-ui">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui">
 <!-- <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, minimal-ui" /> -->
     <title><?php echo $page_name; ?></title>
     
@@ -53,7 +53,7 @@
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item"><a class="nav-link" href="/products" style="color: rgba(255,255,255,0.9);">Products</a></li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/cart" style="color: rgba(255,255,255,0.55);">
+                            <a id="cartNum" class="nav-link" href="/cart" style="color: rgba(255,255,255,0.55);">
                                 Cart
                                 <?php
                                     if (isset($_SESSION['cart'])) {
@@ -182,7 +182,8 @@
                     if(response.status) {
                         // remove parent card
                         // el.parent().parent().parent().remove();
-                        window.location.href = window.location.href;
+                        $("#cartNum").html("Cart <span id=\"cart_count\" class=\"text-warning\">0</span><?php echo count($_SESSION['cart']);?></span>");
+                        // window.location.href = window.location.href;
                     }
                 });
             }

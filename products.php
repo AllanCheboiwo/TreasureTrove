@@ -38,7 +38,7 @@
     <div class="card" style="box-shadow: 0px 0px 6px #cccccc;border-style: none;border-radius: 8px;margin: 16px 0;">
         <div class="card-body" style="background: #364652;border-radius: 8px;box-shadow: 0px 0px 3px #364652;">
             <h4 class="card-title align-content-center align-items-center" style="color: #1cc4ab; margin-bottom: 0">Products Listing</h4>
-            <h6 class="text-muted card-subtitle mb-2" style="margin-bottom: 0">
+            <h6 class="x" style="margin-bottom: 0">
             </h6>
         </div>
     </div>
