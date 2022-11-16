@@ -56,7 +56,17 @@
                     $expDate = strval("$expMonth/".$_POST['newcardExpYear']);
                     $expDate = DateTime::createFromFormat('m/Y', $expDate);
                     $expDate = date_format($expDate, 'Y-m-01');
-                    $res = PaymentMethod::AddPM($_SESSION['customer']['customerId'], $_REQUEST['newcardNumber'], $_REQUEST['newcardType'], $expDate);
+                    $data = [
+                        'customerId' => $_SESSION['customer']['customerId'],
+                        'paymentNumber' => $_POST['newcardNumber'],
+                        'paymentType' => $_POST['newcardType'],
+                        'paymentExpiryDate' => $expDate
+                    ];
+                    if (PaymentMethod::IsDuplicate($data)) {
+                        $res['message'] = 'Duplicate Payment Method';
+                    } else {
+                        $res = PaymentMethod::AddPM($_SESSION['customer']['customerId'], $_REQUEST['newcardNumber'], $_REQUEST['newcardType'], $expDate);
+                    }
                 } else {
                     $res['message'] = "Missing Card Details";
                 }

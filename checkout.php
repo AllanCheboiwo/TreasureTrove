@@ -37,7 +37,7 @@
                             <h4 class="card-title" style="color: #364652;">Shipping Address</h4>
                             <h6 class="text-muted card-subtitle mb-2">Items will be shipped to this location</h6>
                             <form method="post" enctype="application/x-www-form-urlencoded" action="<?php echo $_SERVER['PHP_SELF'];?>">
-                                <input class="form-control" type="text" name="shiptoAddress" placeholder="Street Address" style="background: #fafafa;border-style: none;box-shadow: inset 0px 0px 3px #fafafa;margin: 8px 0px;" value="<?php echo $customer->address; ?>"/>
+                                <input class="form-control" type="text" name="shipToAddress" placeholder="Street Address" style="background: #fafafa;border-style: none;box-shadow: inset 0px 0px 3px #fafafa;margin: 8px 0px;" value="<?php echo $customer->address; ?>"/>
                                 <input class="form-control" type="text" name="shipToUAFN" placeholder="Apt/Unit/Flat Number" style="background: #fafafa;border-style: none;box-shadow: inset 0px 0px 3px #fafafa;margin: 8px 0px;" value="<?php echo $customer->UAFN; ?>"/>
                                 <div class="row g-0">
                                     <div class="col">
@@ -79,7 +79,7 @@
                                 </div>
                                 <div class="row g-0">
                                     <div class="col-sm-5 col-lg-4 col-xl-3 col-xxl-3 d-inline-flex justify-content-center align-items-center align-content-center">
-                                        <select class="form-select" name="cardType" style="border-style: none;box-shadow: 0px 0px 3px #169884;background: #1cc4ab;color: #364652;font-weight: bold;">
+                                        <select class="form-select" name="cardExpiryMonth" style="border-style: none;box-shadow: 0px 0px 3px #169884;background: #1cc4ab;color: #364652;font-weight: bold;">
                                             <?php
                                                 $ncount = 0;
                                                 // count to 12
@@ -89,7 +89,7 @@
                                                 }
                                             ?>
                                         </select>
-                                        <select class="form-select" name="cardType" style="border-style: none;box-shadow: 0px 0px 3px #169884;background: #1cc4ab;color: #364652;font-weight: bold;">
+                                        <select class="form-select" name="cardExpiryYear" style="border-style: none;box-shadow: 0px 0px 3px #169884;background: #1cc4ab;color: #364652;font-weight: bold;">
                                             <?php
                                                 $currentYear = date("Y");
                                                 $count = 0;
@@ -102,6 +102,7 @@
                                     </div>
                                     <div class="col"><input class="form-control" type="text" name="cardCVV" maxlength=3 placeholder="Card CVV" style="background: #fafafa;border-style: none;box-shadow: inset 0px 0px 3px #fafafa;margin: 8px 0px;"/></div>
                                 </div>
+                                <button class="btn btn-primary btn-sm d-flex align-items-center align-content-center justify-content-center" id="savepm" style="border: none; margin-top:8px; box-shadow: 0px 0px 3px #169884; background: #1cc4ab ">Save</button>
                             </form>
                         </div>
                     </div>
@@ -174,6 +175,22 @@
                 }
             });
         })
+        // savepm to the database
+        $("#savepm").click((e) => {
+            e.preventDefault();
+            let data = {
+                'newcardType': $("select[name=cardType]").val(),
+                'newcardNumber': $("input[name=cardNumber]").val(),
+                'newcardExpMonth': $("select[name=cardExpiryMonth]").val(),
+                'newcardExpYear': $("select[name=cardExpiryYear]").val()
+            }
+            let ajaxUrl = '/include/api/account.php?action=';
+            ajaxRequest(ajaxUrl+"addpm", data, 'POST', (res) => {
+                console.log(res);
+                res = JSON.parse(res);
+                showSnackbar(res.message);
+            });
+        })  
     })
 </script>
 <?php

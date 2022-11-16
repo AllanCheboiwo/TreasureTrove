@@ -139,4 +139,22 @@ class PaymentMethod {
         return $result;
     }
 
+    public static function IsDuplicate($data = array()) {
+        if (isset($data['paymentNumber'], $data['paymentType'], $data['paymentExpiryDate'], $data['customerId'])) {
+            $sql = "SELECT * FROM paymentMethod WHERE paymentNumber = ? AND paymentType = ? AND paymentExpiryDate = ? AND customerId = ?";
+            $params = array($data['paymentNumber'], $data['paymentType'], $data['paymentExpiryDate'], $data['customerId']);
+            $db = new DB();
+            $stmt = sqlsrv_query($db->conn, $sql, $params);
+            if ($stmt === false) {
+                die(print_r(sqlsrv_errors(), true));
+            }
+            $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+            if ($row) {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+
 }

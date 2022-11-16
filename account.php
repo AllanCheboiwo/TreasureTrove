@@ -197,7 +197,7 @@
                     </div>
                 </section>
             </div>
-            <div class="tab-pane active" role="tabpanel" id="payment">
+            <div class="tab-pane" role="tabpanel" id="payment">
                 <div class="card" style="box-shadow: 0px 0px 6px #cccccc;border-style: none;border-radius: 8px;margin: 0;">
                     <div class="card-body align-content-center" style="background: #364652;border-radius: 8px;box-shadow: 0px 0px 3px #364652;">
                         <h5 class="card-title" style="color: #1cc4ab;">Payment</h5>

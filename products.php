@@ -24,7 +24,7 @@
             }
         }
     }
-    print_r($cat);
+    // print_r($cat);
     if ($cat === "all" || $cat === "") {
         $products = Product::SortAndFilterProducts($sort, $filter, $minPrice, $maxPrice);
     } else {

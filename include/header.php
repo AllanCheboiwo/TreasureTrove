@@ -51,9 +51,9 @@
                 </button>
                 <div class="collapse navbar-collapse d-xxl-flex align-items-xxl-center collapse" id="navcol-2">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link" href="/products" style="color: rgba(255,255,255,0.9);">Products</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/products" style="">Products</a></li>
                         <li class="nav-item">
-                            <a id="cartNum" class="nav-link" href="/cart" style="color: rgba(255,255,255,0.55);">
+                            <a id="cartNum" class="nav-link" href="/cart" style="">
                                 Cart
                                 <?php
                                     if (isset($_SESSION['cart'])) {
@@ -65,7 +65,7 @@
                                 ?>
                             </a>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="/orders" style="color: rgba(255,255,255,0.55);">Orders</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/orders" style="">Orders</a></li>
                     </ul>
                     <div class="dropdown">
                         <button class="btn btn-primary dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button" style="padding: 6px 12px;background: #169884;border-style: none; box-shadow: 0px 0px 6px #169884"><?php echo $_SESSION['loggedIn'] ? $_SESSION['userId'] : 'Guest'?>&nbsp;</button>
@@ -183,7 +183,7 @@
                         // remove parent card
                         // el.parent().parent().parent().remove();
                         $("#cartNum").html("Cart <span id=\"cart_count\" class=\"text-warning\">0</span><?php echo count($_SESSION['cart']);?></span>");
-                        // window.location.href = window.location.href;
+                        window.location.reload();
                     }
                 });
             }

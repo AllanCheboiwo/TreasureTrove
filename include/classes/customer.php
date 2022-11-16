@@ -226,8 +226,8 @@ class Customer extends AUTH {
         if ($stmt === false) {
             die(print_r(sqlsrv_errors(), true));
         }
-        $result = sqlsrv_fetch_array($stmt);
-        return new Customer($result['userId']);
+        $result = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+        return new Customer($result['userid']);
     }
 
     public static function GetCustomerByUserId($userId) {
@@ -239,7 +239,7 @@ class Customer extends AUTH {
             die(print_r(sqlsrv_errors(), true));
         }
         $result = sqlsrv_fetch_array($stmt);
-        return new Customer($result['userId']);
+        return new Customer($result['userid']);
     }
 
     public function GetPaymentMethods() {

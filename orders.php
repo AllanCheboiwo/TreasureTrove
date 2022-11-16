@@ -3,9 +3,9 @@
     $page_name = "Orders | Treasure Trove";
     include 'include/header.php';
 ?>
-<section class="container-md" style="padding: 20px 0px">
+<section class="container-md" style="padding: 20px 10px">
     <div class="row g-0 row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-2 row-cols-xxl-2">
-        <div class="col d-flex align-items-center">
+        <div class="col align-items-center">
             <div class="card" style="box-shadow: 0px 0px 6px #cccccc;border-style: none;border-radius: 8px;margin: 16px 0;">
                 <div class="card-body align-content-center" style="background: #364652;border-radius: 8px;box-shadow: 0px 0px 3px #364652;">
                     <h5 class="card-title" style="color: #1cc4ab;margin:0px">Your Orders</h5>
@@ -25,7 +25,7 @@
         </div>
     </div>
 </section>
-<section class="container" style="padding: 20px 0px">
+<section class="container" style="padding: 20px 10px">
     <?php
         $orders = OrderSummary::GetOrdersByCustomer($_SESSION['customer']['customerId']);
         foreach ($orders as $order) {
@@ -39,10 +39,10 @@
                     $orderTotal += $item['price'] * $item['quantity'];
                 }
             }
-            $tempDate = $orderDetails;
-            $orderplaced = $tempDate;
+            $orderPlaced = $order['orderDate']->format('M d, Y');
+            // print_r($orderplaced);
             // $orderPlaced = ($orderDetails['orderDate'] !== null) ? $orderDetails['orderDate'] : "Not Yet Placed";
-            echo '<div class="card" style="margin: 40px;border-style: none;box-shadow: 0px 0px 6px #cccccc;">
+            echo '<div class="card" style="margin: 10px;border-style: none;box-shadow: 0px 0px 6px #cccccc;">
                     <div class="container-fluid">
                         <div class="row" style="border-top-left-radius: 6px;border-top-right-radius: 6px;background: #364652;border-style: none;box-shadow: 0px 0px 6px #364652;color: #169884;">
                             <div class="col-6 col-sm-6 col-md-3 col-xl-2" style="padding: 10px;">
@@ -63,7 +63,7 @@
                         </div>
                         <div class="row g-0" style="margin: 0px -12px;">
                             <div class="col-12" style="background: #169884;color: #faf3dd;box-shadow: 0px 0px 6px #1cc4ab;">
-                                <h5 style="padding: 10px;">Delivered Nov. 9, 2022</h5>
+                                <h5 style="padding: 10px;">Delivered '.$orderPlaced.'</h5>
                             </div>
                             <div class="col-sm-12 col-md-8 col-lg-9 col-xxl-9">
                             ';
@@ -83,10 +83,10 @@
                     // }
                             echo '
                             </div>
-                            <div class="col-sm-12 col-md-4 col-lg-3 col-xxl-3 d-flex justify-content-center align-items-center" style="padding: 10px;">
+                            <div class="col-sm-12 col-md-4 col-lg-3 col-xxl-3 d-flex justify-content-center align-items-start" style="padding: 10px;">
                                 <div class="btn-group-vertical d-flex" role="group"><a class="btn btn-primary" role="button" style="border-radius: 6px;border-style: none;box-shadow: 0px 0px 6px #169884;background: #1cc4ab;">Write Product Reviews</a><a class="btn btn-primary" role="button" style="border-radius: 6px;border-style: none;box-shadow: 0px 0px 6px #faf3dd;background: #faf3dd;color: #364652;margin-top: 8px;">
                                 ';
-                                if ($orderDetails['orderDate'] != null) {
+                                if ($orderPlaced != null) {
                                     echo 'Track Package';
                                 } else {
                                     echo 'Place Order';
@@ -99,7 +99,7 @@
                     <div class="card-body" style="padding: 10px 8px;">
                         <button class="btn btn-primary" type="button" style="border-style: none;border-radius: 6px;box-shadow: 0px 0px 6px #169884;background: #1cc4ab;" onclick="window.location.href=\'/order.php?oid='.$order['orderId'].'\'">
                     ';
-                    if ($orderDetails['orderDate'] != null) {
+                    if ($orderPlaced != null) {
                         echo 'View Order Details';
                     } else {
                         echo 'Checkout';

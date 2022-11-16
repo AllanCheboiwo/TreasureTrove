@@ -40,7 +40,7 @@ class OrderSummary {
         $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
         if ($row != null) {
             $this->orderId = $row['orderId'];
-            $this->orderDate = $row['orderDate']->format('d m, Y');
+            $this->orderDate = $row['orderDate']->format('M d, Y');
             $this->totalAmount = $row['totalAmount'];
             $this->shiptoAddress = explode(self::$addressDelimeter, $row['shiptoAddress'])[0];
             $this->shiptoCity = $row['shiptoCity'];
@@ -107,27 +107,28 @@ class OrderSummary {
      * @return string
      */
     public static function DisplayOrderSummary($orderId) {
+        $order = new OrderSummary($orderId);
         $orderProducts = OrderSummary::GetItemsByOrderId($orderId);
         $orderSummaryString = "";
         if (!empty($orderProducts)) {
             foreach ($orderProducts as $orderProduct) {
                 $product = new Product($orderProduct['productId']);
                 $category = new Category($product->categoryId);
-                $orderSummaryString .= '<div class="container" style="padding: 0px; margin:8px">
+                $orderSummaryString .= '<div class="container" style="padding: 8px;">
                                             <div class="row g-0">
                                                 <div class="col-sm-4 col-md-4">
-                                                    <img class="rounded img-fluid" src="'.$product->ProductImageLink().'" style="width: 100%;" />
+                                                    <img class="rounded img-fluid" src="'.$product->ProductImageLink().'" style="width: 100%;object-fit: cover;object-position: center;" />
                                                 </div>
                                                 <div class="col-sm-8 col-md-8" style="padding: 10px;">
                                                     <a href="/product.php?pid='.$product->productId.'" style="text-decoration: none"><h5>'.$product->productName.'</h5></a>
                                                     <a href="/category/'.str_replace('/', '-', $category->categoryName).'" style="text-decoration: none"><h6 class="text-muted mb-2">'.$category->categoryName.'</h6></a>
                                                     <h6 class="text-muted mb-2">Quantity: '.$orderProduct['quantity'].'</h6>
                                                     <h6 class="text-muted mb-2">Price: $'.number_format($orderProduct['price'] * $orderProduct['quantity'], 2).'</h6>
-                                                    <p>'.$product->productDesc.'</p>
+                                                    <p style="margin-bottom: 4px">'.$product->productDesc.'</p>
                                                     ';
-                if ($orderProduct['orderDate'] !== null) {
-                    $orderSummaryString .= '<button class="btn btn-primary" type="button" style="border-style: none;border-radius: 6px;box-shadow: 0px 0px 6px #169884;display: inline-flex;background: #1cc4ab;">
-                                                <i class="material-icons" style="margin-right: 8px;">local_grocery_store</i>
+                if ($order->orderDate !== null) {
+                    $orderSummaryString .= '<button class="btn btn-primary btn-sm justify-content-center align-items-center align-content-center" type="button" style="border-style: none;border-radius: 6px;box-shadow: 0px 0px 6px #169884;display: inline-flex;background: #1cc4ab; font-size:12px">
+                                                <i class="material-icons" style="font-size:12px">local_grocery_store</i>
                                                 Buy it again
                                             </button>
                                             ';
