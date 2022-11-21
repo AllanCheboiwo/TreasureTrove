@@ -139,7 +139,7 @@ class OrderSummary {
                 $orderSummaryString .= '<div class="container" style="padding: 8px;">
                                             <div class="row g-0">
                                                 <div class="col-sm-4 col-md-4">
-                                                    <img class="rounded img-fluid" src="'.$product->ProductImageLink().'" style="width: 100%;object-fit: cover;object-position: center;" />
+                                                    <img class="rounded img-fluid" src="'.$product->ProductImageLink().'" style="background-color: #efefef;width: 100%;height: 200px;object-fit: contain;object-position: center;" />
                                                 </div>
                                                 <div class="col-sm-8 col-md-8" style="padding: 10px;">
                                                     <a href="/product.php?pid='.$product->productId.'" style="text-decoration: none"><h5>'.$product->productName.'</h5></a>
