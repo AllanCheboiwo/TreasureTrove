@@ -58,7 +58,7 @@
                 'phonenum': $("input[name=phonenum]").val()
             };
             ajaxRequest("/include/api/auth.php?action=register", data, 'POST', function (response) {
-                // console.log(response);
+                console.log(response);
                 response = JSON.parse(response);
                 // console.log(response);
                 // alert(response['message']);

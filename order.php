@@ -65,7 +65,7 @@
                 <div id="accordion-1" class="accordion" role="tablist" style="margin-top: 8px;">
                     <div class="accordion-item">
                         <h2 class="accordion-header" role="tab"><button class="accordion-button fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-1 .item-1" aria-expanded="true" aria-controls="accordion-1 .item-1" style="background: #364652;color: #1cc4ab;">Transaction</button></h2>
-                        <div class="accordion-collapse collapse item-1" role="tabpanel" data-bs-parent="#accordion-1">
+                        <div class="accordion-collapse collapsed item-1" role="tabpanel" data-bs-parent="#accordion-1">
                             <div class="accordion-body">
                                 <p class="mb-0">Items shipped: Shipped Date - 
 								<?php

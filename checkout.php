@@ -142,19 +142,20 @@
 </div>
 <script type="text/javascript">
     $(document).ready(() => {
-        let data = {
-            'customerId': <?php echo $customerId; ?>,
-            'shiptoAddress': $("input[name=shipToAddress").val() + "<?php echo Customer::$addressDelimeter; ?>" + $("input[name=shipToUAFN]").val(),
-            'shiptoCity': $("input[name=shipToCity]").val(),
-            'shiptoState': $("input[name=shipToState]").val(),
-            'shiptoPostalCode': $("input[name=shipToPostalCode]").val(),
-            'shiptoCountry': $("input[name=shipToCountry]").val(),
-        }
         let ajaxUrl = '/include/api/cart.php?action=';
         let placeOrderBtn = $("#placeOrder");
         let placeOrderSumBtn = $("#placeOrderSummary");
         placeOrderBtn.click((e) => {
             e.preventDefault();
+            let data = {
+                'customerId': <?php echo $customerId; ?>,
+                'shiptoAddress': $("input[name=shipToAddress").val() + "<?php echo Customer::$addressDelimeter; ?>" + $("input[name=shipToUAFN]").val(),
+                'shiptoCity': $("input[name=shipToCity]").val(),
+                'shiptoState': $("input[name=shipToState]").val(),
+                'shiptoPostalCode': $("input[name=shipToPostalCode]").val(),
+                'shiptoCountry': $("input[name=shipToCountry]").val(),
+            }
+            console.log(data);
             ajaxRequest(ajaxUrl+"checkout", data, 'POST', (res) => {
                 console.log(res);
                 res = JSON.parse(res);
@@ -166,6 +167,15 @@
         })
         placeOrderSumBtn.click((e) => {
             e.preventDefault();
+            let data = {
+                'customerId': <?php echo $customerId; ?>,
+                'shiptoAddress': $("input[name=shipToAddress").val() + "<?php echo Customer::$addressDelimeter; ?>" + $("input[name=shipToUAFN]").val(),
+                'shiptoCity': $("input[name=shipToCity]").val(),
+                'shiptoState': $("input[name=shipToState]").val(),
+                'shiptoPostalCode': $("input[name=shipToPostalCode]").val(),
+                'shiptoCountry': $("input[name=shipToCountry]").val(),
+            }
+            console.log(data);
             ajaxRequest(ajaxUrl+"checkout", data, 'POST', (res) => {
                 console.log(res);
                 res = JSON.parse(res);

@@ -89,7 +89,11 @@
                             <div class="col-sm-6 col-lg-12 d-flex justify-content-start align-items-center align-content-center" style="position: relative;">
                                 <!-- <button class="btn btn-primary" type="button">Add To Cart</button> -->
                                 <?php
-                                    echo $product->DisplayAddToCartButton();
+                                    if (ProductInventory::IsOutOfStock($product->productId, 1)) {
+                                        echo '<button class="btn btn-primary" type="button" disabled>Out of Stock</button>';
+                                    } else {
+                                        echo $product->DisplayAddToCartButton();
+                                    }
                                 ?>
                             </div>
                         </div>

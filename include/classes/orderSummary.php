@@ -69,7 +69,29 @@ class OrderSummary {
     }
 
     public static function GetOrder($orderId) {
-        return new OrderSummary($orderId);
+        $sql = "SELECT * FROM orderSummary WHERE orderId = ?";
+        $params = array($orderId);
+        $db = new DB();
+        $stmt = sqlsrv_query($db->conn, $sql, $params);
+        if ($stmt === false) {
+            die(print_r(sqlsrv_errors(), true));
+        }
+        $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+        if ($row != null) {
+            $order = new OrderSummary($row['orderId']);
+            $order->orderDate = $row['orderDate']->format('M d, Y');
+            $order->totalAmount = $row['totalAmount'];
+            $order->shiptoAddress = explode(self::$addressDelimeter, $row['shiptoAddress'])[0];
+            $order->shiptoCity = $row['shiptoCity'];
+            $order->shiptoState = $row['shiptoState'];
+            $order->shiptoPostalCode = $row['shiptoPostalCode'];
+            $order->shiptoCountry = $row['shiptoCountry'];
+            $order->customerId = $row['customerId'];
+            $order->UAFN = explode(self::$addressDelimeter, $row['shiptoAddress'])[1];
+            return $order;
+        } else {
+            return null;
+        }
     }
 
     public function cancelOrderSummary($orderId) {
@@ -256,5 +278,39 @@ class OrderSummary {
         $address = $this->GetAddress();
         // create address string
         return $address['address'] . ' ' . $address['UAFN'] . ', ' . $address['city'] . ', ' . $address['state'] . ' ' . $address['postalCode'] . ', ' . $address['country'];
+    }
+
+    /**
+     * Search through orders, customers, products, and categories orders and customers are linked by customerId, products and orders are linked by orderId, products, and categories orders are linked by categoryId. Search in productName, productDesc, customer's first name, and customer's last name, customer's userId, categoryName, categoryDesc
+     * @param mixed $term
+     * @return array
+     */
+    public static function Search($term) {
+        // first get all orders,
+        // then get all customers,
+        // then get all products,
+        // then get all categories
+        $sql = "SELECT * FROM ordersJOIN customer ON orders.customerId = customers.customerId JOIN orderproduct ON orders.orderId = orderproduct.orderId JOIN product ON product.productId = orderproduct.productId JOIN Category ON category.categoryId = product.categoryId WHERE orderId LIKe ? OR customerId LIKE ? OR firstName LIKE ? OR lastName LIKE ? OR productId LIKe ? OR productDesc LIKE ? OR productName LIKE ? OR productId LIke ? OR totalAmount LIKE ? OR shiptoaddress LIKE ? OR shiptocity LIKE ? OR shiptocountry LIKE ? OR shiptostate LIKE ? OR shiptopostalcode LIKE ? OR categoryId LIKE ? OR categoryName LIKE ? OR categoryDesc LIKE ?";
+        $params = array($term, $term, $term, $term, $term, $term, $term, $term, $term, $term, $term, $term, $term, $term, $term, $term, $term);
+        $db = new DB();
+        $pstmt = sqlsrv_query($db->conn, $sql, $params);
+        if ($pstmt === false) {
+            die(print_r(sqlsrv_errors(), true));
+        }
+        $orders = array();
+        // find if $term exists in the returned results, return the order if found
+        while ($row = sqlsrv_fetch_array($pstmt, SQLSRV_FETCH_ASSOC)) {
+            array_push($orders, $row);
+        }
+        // $foundOrders = array();
+        // foreach ($orders as $order) {
+        //     // // if the search term exists in any field of the current item, push to foundOrders
+        //     // foreach($order as $field) {
+        //     //     if (strpos($field, $term)!== false) {
+        //     //         array_push($foundOrders, $order);
+        //     //     }
+        //     // }
+        // }
+        return $orders;
     }
 }

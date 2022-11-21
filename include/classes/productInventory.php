@@ -14,7 +14,9 @@ class ProductInventory {
         if($this->db == null) {
             $this->db = $db->conn;
         }
-        $this->loadProductInventory($productId, $warehouseId);
+        $this->productId = $productId;
+        $this->warehouseId = $warehouseId;
+        $this->LoadData();
     }
 
     public function __destruct() {
@@ -22,9 +24,9 @@ class ProductInventory {
         $this->db = null;
     }
 
-    public function loadProductInventory($productId, $warehouseId) {
+    public function LoadData() {
         $sql = "SELECT * FROM productInventory WHERE productId = ? AND warehouseId = ?";
-        $params = array($productId, $warehouseId);
+        $params = array($this->productId, $this->warehouseId);
         $db = new DB();
         $stmt = sqlsrv_query($db->conn, $sql, $params);
         if ($stmt === false) {
@@ -39,8 +41,8 @@ class ProductInventory {
         }
     }
 
-    public function getProductInventory($productId, $warehouseId) {
-        $this->loadProductInventory($productId, $warehouseId);
+    public function GetData() {
+        $this->LoadData();
         $productInventory = array(
             'productId' => $this->productId,
             'warehouseId' => $this->warehouseId,
@@ -50,9 +52,10 @@ class ProductInventory {
         return $productInventory;
     }
 
-    public function getProductInventories() {
+    public static function GetProductsInventory() {
         $sql = "SELECT * FROM productInventory";
-        $stmt = sqlsrv_query($this->db, $sql);
+        $db = new DB();
+        $stmt = sqlsrv_query($db->conn, $sql);
         if ($stmt === false) {
             die(print_r(sqlsrv_errors(), true));
         }
@@ -69,46 +72,55 @@ class ProductInventory {
         return $productInventories;
     }
 
-    public function updateProductInventory($productId, $warehouseId, $quantity, $price) {
+    public static function GetProductsInventoryByID($productId, $warehouseId) {
+        return new ProductInventory($productId, $warehouseId);
+    }
+
+    public static function UpdateProductInventory($productId, $warehouseId, $quantity, $price) {
         $sql = "UPDATE productInventory SET quantity = ?, price = ? WHERE productId = ? AND warehouseId = ?";
         $params = array($quantity, $price, $productId, $warehouseId);
-        $stmt = sqlsrv_query($this->db, $sql, $params);
+        $db = new DB();
+        $stmt = sqlsrv_query($db->conn, $sql, $params);
         if ($stmt === false) {
             die(print_r(sqlsrv_errors(), true));
         }
     }
 
-    public function insertProductInventory($productId, $warehouseId, $quantity, $price) {
+    public static function AddProductInventory($productId, $warehouseId, $quantity, $price) {
         $sql = "INSERT INTO productInventory (productId, warehouseId, quantity, price) VALUES (?, ?, ?, ?)";
         $params = array($productId, $warehouseId, $quantity, $price);
-        $stmt = sqlsrv_query($this->db, $sql, $params);
+        $db = new DB();
+        $stmt = sqlsrv_query($db->conn, $sql, $params);
         if ($stmt === false) {
             die(print_r(sqlsrv_errors(), true));
         }
     }
 
-    public function deleteProductInventory($productId, $warehouseId) {
+    public static function DeleteProductInventory($productId, $warehouseId) {
         $sql = "DELETE FROM productInventory WHERE productId = ? AND warehouseId = ?";
         $params = array($productId, $warehouseId);
-        $stmt = sqlsrv_query($this->db, $sql, $params);
+        $db = new DB();
+        $stmt = sqlsrv_query($db->conn, $sql, $params);
         if ($stmt === false) {
             die(print_r(sqlsrv_errors(), true));
         }
     }
 
-    public function deleteProductInventories($productId) {
+    public static function DeleteProductInventories($productId) {
         $sql = "DELETE FROM productInventory WHERE productId = ?";
         $params = array($productId);
-        $stmt = sqlsrv_query($this->db, $sql, $params);
+        $db = new DB();
+        $stmt = sqlsrv_query($db->conn, $sql, $params);
         if ($stmt === false) {
             die(print_r(sqlsrv_errors(), true));
         }
     }
 
-    public function deleteProductInventoriesByWarehouse($warehouseId) {
+    public static function deleteProductInventoriesByWarehouse($warehouseId) {
         $sql = "DELETE FROM productInventory WHERE warehouseId = ?";
         $params = array($warehouseId);
-        $stmt = sqlsrv_query($this->db, $sql, $params);
+        $db = new DB();
+        $stmt = sqlsrv_query($db->conn, $sql, $params);
         if ($stmt === false) {
             die(print_r(sqlsrv_errors(), true));
         }
@@ -128,5 +140,22 @@ class ProductInventory {
 
     public function getPrice() {
         return $this->price;
+    }
+
+    public static function IsOutOfStock($productId, $warehouseId) {
+        $sql = "SELECT * FROM productInventory WHERE productId = ? AND warehouseId = ?";
+        $params = array($productId, $warehouseId);
+        $db = new DB();
+        $stmt = sqlsrv_query($db->conn, $sql, $params);
+        if ($stmt === false) {
+            die(print_r(sqlsrv_errors(), true));
+        }
+        $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+        if ($row != null) {
+            if ($row['quantity'] == 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }

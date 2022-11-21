@@ -7,7 +7,7 @@
 	class DB {
 		public $dbuser = "SA";
 		public $dbpass = "YourStrong@Passw0rd";
-		public $database = "tempdb";
+		public $database = "orders";
 		public $server = "db";
 		public $conn;
 

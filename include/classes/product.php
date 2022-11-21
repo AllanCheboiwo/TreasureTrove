@@ -213,16 +213,16 @@ class Product {
             if ($row->productImageURL == null) {
                 $row->productImageURL = 'https://cdn.bootstrapstudio.io/placeholders/1400x800.png';
             }
-            return '<div class="col col-md-3">
+            return '<div class="col col-md-6">
                         <div class="card" style="margin: 4px; box-shadow: 0px 0px 3px #cccccc; border: none;">
-                            <img class="card-img-top" src="'.$row->ProductImageLink(). '" alt="Card image cap">
+                            <img class="card-img-top" style="background:url('.$row->ProductImageLink(). ') center center / cover no-repeat; object-fit: cover; height: 200px;backdrop-filter: blur(10px);box-shadow: 0px 0px 3px #cccccc;border:none;">
                             <div class="card-body">
                                 <h5 class="card-title">' . $row->productName. '</h5>
                                 <h6 class="card-text">$'. $row->productPrice. '</p>
                                 <p class="card-text">' . $row->productDesc. '</p>
-                                <a href="product.php?pid=' . $row->productId. '" class="btn btn-primary" style="margin: 0px; box-shadow: 0px 0px 6px #0d6efd; border: none;">
+                                <a href="/product.php?pid=' . $row->productId. '" class="btn btn-primary btn-sm" style="margin: 0px; box-shadow: 0px 0px 6px #0d6efd; border: none;">
                                     View
-                                </a>'.$row->DisplayAddToCartButton().'
+                                </a>'.$row->DisplayAddToCartButton(8).'
                             </div>
                         </div>
                     </div>';
@@ -354,12 +354,6 @@ class Product {
 
     public static function SortAndFilterProducts($ordersort, $pricefilter, $min, $max) {
         // print arguments
-        $args = [
-            'ordersort' => $ordersort,
-            'pricefilter' => $pricefilter,
-            'min' => $min,
-            'max' => $max
-        ];
         $prods = Self::GetProducts();
         if ($ordersort == 'alphabetical') {
             usort($prods, function($a, $b) {
@@ -472,14 +466,14 @@ class Product {
         return array_slice($products, 0, $numProducts);
     }
 
-    public function DisplayAddToCartButton() {
+    public function DisplayAddToCartButton($marginLeft = 0) {
         $data = [
             "pid" => $this->productId,
             "pname" => urlencode($this->productName),
             "price" => $this->productPrice,
             "quantity" => 1
         ];
-        return "<a onclick='cartAjax(".json_encode($data).", \"add\")' class='btn btn-primary btn-sm preview-toggle' style='margin: 0px; box-shadow: 0px 0px 6px #0d6efd; border: none;margin-left:8px'>Cart It
+        return "<a onclick='cartAjax(".json_encode($data).", \"add\")' class='btn btn-primary btn-sm preview-toggle' style='margin: 0px; box-shadow: 0px 0px 6px #0d6efd; border: none;margin-left:".$marginLeft."px'>Add To Cart
         </a>";
     }
 

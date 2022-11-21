@@ -10,12 +10,23 @@ require ('include/header.php');
         <div class="swiper-container">
             <!-- Start: Slide Wrapper -->
             <div class="swiper-wrapper">
+                <?php
+                    $topProducts = OrderProduct::GetMostOrderedProducts(5);
+                    foreach($topProducts as $product) {
+                        $prod = Product::GetProduct($product['productId']);
+                        echo '<div class="swiper-slide d-flex justify-content-center align-items-end" style="background: url(';
+                        echo $prod->ProductImageLink();
+                        echo ') center center / cover no-repeat;object-fit: cover;backdrop-filter: blur(10px);">';
+                        echo '<span class="fw-bold card-subtitle" style="margin-bottom: 48px; background: #111111; border-radius: 6px; box-shadow: 0 0 3px #000000; padding: 16px; color: #1cc4ab"><a href="/product.php?pid='.$prod->productId.'" style="text-decoration: none">'.$prod->productName.'</a></span>';
+                        echo '<span class="fw-bold card-subtitle" style="margin-left: 8px;margin-bottom: 48px; background: #111111; border-radius: 6px; box-shadow: 0 0 3px #000000; padding: 16px; color: #1cc4ab"> Has been ordered: '.$product['orderedTimes'].' times!</span></div>';
+                    }
+                ?>
                 <!-- Start: Slide -->
-                <div class="swiper-slide" style="background: url(&quot;https://cdn.bootstrapstudio.io/placeholders/1400x800.png&quot;) center center / cover no-repeat;"></div><!-- End: Slide -->
+                <!-- <div class="swiper-slide" style="background: url(&quot;https://cdn.bootstrapstudio.io/placeholders/1400x800.png&quot;) center center / cover no-repeat;"></div> -->
+                <!-- End: Slide -->
                 <!-- Start: Slide -->
-                <div class="swiper-slide" style="background: url(&quot;https://cdn.bootstrapstudio.io/placeholders/1400x800.png&quot;) center center / cover no-repeat;"></div><!-- End: Slide -->
-                <!-- Start: Slide -->
-                <div class="swiper-slide" style="background: url(&quot;https://cdn.bootstrapstudio.io/placeholders/1400x800.png&quot;) center center / cover no-repeat;"></div><!-- End: Slide -->
+                <!-- <div class="swiper-slide" style="background: url(&quot;https://cdn.bootstrapstudio.io/placeholders/1400x800.png&quot;) center center / cover no-repeat;"></div> -->
+                <!-- End: Slide -->
             </div><!-- End: Slide Wrapper -->
             <!-- Start: Pagination -->
             <div class="swiper-pagination"></div><!-- End: Pagination -->
@@ -74,14 +85,14 @@ require ('include/header.php');
             }
             echo '<div class="col-auto col-sm-6 col-md-6 col-lg-3">';
             echo '<div class="card" style="margin: 4px">';
-            echo '<img class="card-img-top" src="'.$product['productImageURL'] . '" alt="Card image cap">';
+            echo '<img class="card-img-top" src="'.$product['productImageURL'] . '" alt="Card image cap" style="object-fit: cover; height: 230px;backdrop-filter: blur(10px);">';
             echo '<div class="card-body">';
             echo '<h5 class="card-title">' . $product['productName'] . '</h5>';
             echo '<h6 class="card-text">$'. $product['productPrice']. '</p>';
             echo '<p class="card-text">' . $product['productDesc'] . '</p>';
-            echo '<a href="product.php?pid=' . $product['productId'] . '" class="btn btn-primary">View</a>';
+            echo '<a href="product.php?pid=' . $product['productId'] . '" class="btn btn-primary btn-sm" style="margin: 0px; box-shadow: 0px 0px 6px #0d6efd; border: none;">View</a>';
             // echo '<a class="btn btn-primary" style="margin-left:8px" href="#">Add to Cart</a>';
-            echo $pd->DisplayAddToCartButton();
+            echo $pd->DisplayAddToCartButton(8);
             echo '</div>';
             echo '</div>';
             echo '</div>';

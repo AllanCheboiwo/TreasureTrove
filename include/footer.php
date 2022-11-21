@@ -1,5 +1,5 @@
     </main><!-- Start: Footer Dark Multi Column -->
-    <footer class="text-white bg-dark" style="position: sticky;left: 0;bottom: 0;place-items: center;">
+    <footer class="text-white bg-dark" style="position: sticky;left: 0;bottom: 0;place-items: center;background: #364652!important;">
         <div class="container py-4 py-lg-5">
             <div class="row justify-content-center">
                 <!-- Start: Services -->

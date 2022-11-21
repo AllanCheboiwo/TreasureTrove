@@ -122,4 +122,25 @@ class OrderProduct {
             die(print_r(sqlsrv_errors(), true));
         }
     }
+
+    public static function GetMostOrderedProducts($limit) {
+        // List all orderproducts
+        // count the productId as orderedNum, order by productId
+        $items = array();
+        $sql = "SELECT productId, SUM(quantity) as orderedTimes from orderproduct GROUP BY productId ORDER BY SUM(quantity) DESC";
+        $db = new DB();
+        $pstmt = sqlsrv_query($db->conn, $sql);
+        if ($pstmt === false) {
+            die(print_r(sqlsrv_errors(), true));
+        }
+        $count = 0;
+        while ($row = sqlsrv_fetch_array($pstmt)) {
+            array_push($items, $row);
+            $count++;
+            if ($count >= $limit) {
+                break;
+            }
+        }
+        return $items;
+    }
 }
