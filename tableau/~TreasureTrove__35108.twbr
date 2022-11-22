@@ -28,7 +28,7 @@
       <connection class='federated'>
         <named-connections>
           <named-connection caption='127.0.0.1\mssql-lab7,1433' name='sqlserver.1rt32xc1624d4r1d7pgc407y8j7a'>
-            <connection authentication='sqlserver' class='sqlserver' dbname='orders' odbc-native-protocol='yes' one-time-sql='' server='127.0.0.1\mssql-lab7,1433' username='SA' />
+            <connection authentication='sqlserver' class='sqlserver' dbname='' odbc-native-protocol='yes' one-time-sql='' server='127.0.0.1\mssql-lab7,1433' username='SA' />
           </named-connection>
         </named-connections>
         <_.fcp.ObjectModelEncapsulateLegacy.false...relation join='inner' type='join'>

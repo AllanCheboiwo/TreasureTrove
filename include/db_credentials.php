@@ -81,9 +81,6 @@
 		}
 	}
 	$cart = null;
-	$id = null;
-	$name = null;
-	$price = null;
 	if (isset($_SESSION['cart'])){
 		$cart = $_SESSION['cart'];
 	} else{ // No products currently in list.  Create a list.
